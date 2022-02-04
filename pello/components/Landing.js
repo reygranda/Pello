@@ -6,7 +6,6 @@ import { Row, Col, Nav, Button, Container } from 'react-bootstrap';
 import Link from 'next/link';
 import SignupPage from '../pages/SignupPage';
 import { Animated } from 'react-animated-css';
-import LoginModal from './LoginModal';
 
 export default function Landing() {
   return (

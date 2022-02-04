@@ -10,12 +10,21 @@ import {
 import Head from 'next/head';
 import Link from 'next/link';
 import styles from '../styles/SignupPage.module.css';
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { useAuth } from './contexts/AuthContext';
 import firebase from 'firebase';
 import { Animated } from 'react-animated-css';
+import {
+  collection,
+  addDoc,
+  setDoc,
+  doc,
+  query,
+  getFirestore,
+} from 'firebase/firestore';
 
 export default function SignupPage() {
+  const db = firebase.firestore();
   const [error, setError] = useState('');
   const firstNameRef = useRef();
   const lastNameRef = useRef();
@@ -25,22 +34,64 @@ export default function SignupPage() {
 
   const { signup } = useAuth();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (passwordRef.current.value !== passwordConfirmRef.current.value) {
       return setError('Passwords do not match!');
     }
 
+    //   db.collection("users").doc("account").set({
+    //     firstName: firstNameRef.current.value,
+    //   lastName: lastNameRef.current.value,
+    //   email: emailRef.current.value,
+    //   password: passwordRef.current.value,
+
+    // })
+
+    // addDoc(collection(db, 'users'), {
+    //   firstName: firstNameRef.current.value,
+    //   lastName: lastNameRef.current.value,
+    //   email: emailRef.current.value,
+    //   password: passwordRef.current.value,
+    // });
+
+    // const docRef = await db.collection('users').doc('').add({
+    //   firstName: firstNameRef.current.value,
+    //   lastName: lastNameRef.current.value,
+    //   email: emailRef.current.value,
+    //   password: passwordRef.current.value,
+    // });
+
     try {
       setError('');
-      console.log(emailRef.current.value);
-      console.log(signup(emailRef.current.value, passwordRef.current.value));
+      const docRef = await db.collection('users').doc('account').set({
+        firstName: firstNameRef.current.value,
+        lastName: lastNameRef.current.value,
+        email: emailRef.current.value,
+        password: passwordRef.current.value,
+      });
     } catch (caughtError) {
       setError('Unable to create an account');
       console.log(caughtError);
     }
     console.log(error);
+  };
+
+  // useEffect(() => {
+  //   async function fetchMyApi() {
+  //     addDoc(collection(db, 'users')),
+  //       {
+  //         email: emailRef,
+  //         password: passwordRef,
+  //       };
+  //   }
+
+  //   fetchMyApi();
+  // }, []);
+
+  const signUp = async () => {
+    console.log(docRef);
   };
 
   return (

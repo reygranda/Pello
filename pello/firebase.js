@@ -1,4 +1,5 @@
 import firebase from 'firebase/app';
+
 require('firebase/auth');
 var firebaseApp;
 
